@@ -1,30 +1,33 @@
 package com.sap.cloud.sdk.tutorial;
 
 import com.sap.cloud.sdk.cloudplatform.connectivity.HttpDestination;
-import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataException;
-import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.BusinessPartner;
-import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.selectable.BusinessPartnerSelectable;
-import com.sap.cloud.sdk.s4hana.datamodel.odata.services.BusinessPartnerService;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceRuntimeException;
+import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataException;
+
 import com.google.common.collect.Lists;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.List;
+
+import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.BusinessPartner;
+import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.selectable.BusinessPartnerSelectable;
+import com.sap.cloud.sdk.s4hana.datamodel.odata.services.BusinessPartnerService;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.util.List;
-
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class GetBusinessPartnerMockedTest {
     private static BusinessPartner alice;
     private static BusinessPartner bob;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-
         alice = new BusinessPartner();
         alice.setFirstName("Alice");
 
