@@ -5,7 +5,7 @@
     "items": {
       "title": "Business Partner",
       "type": "object",
-      "required": ["BusinessPartner", "LastName"]
+      "required": ["FirstName", "LastName"]
     },
     "minItems": 1
   }
