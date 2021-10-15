@@ -21,7 +21,7 @@ import com.sap.cloud.sdk.s4hana.connectivity.DefaultErpHttpDestination;
 import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.BusinessPartner;
 
 @WebServlet("/businesspartners")
-@ServletSecurity(@HttpConstraint(rolesAllowed = { "Display" }))
+//@ServletSecurity(@HttpConstraint(rolesAllowed = { "Display" }))
 public class BusinessPartnerServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
