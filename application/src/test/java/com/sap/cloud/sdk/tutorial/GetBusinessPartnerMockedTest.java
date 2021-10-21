@@ -6,13 +6,17 @@ import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataException;
 
 import com.google.common.collect.Lists;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collections;
 import java.util.List;
+
+import javax.cache.Caching;
 
 import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.BusinessPartner;
 import com.sap.cloud.sdk.s4hana.datamodel.odata.namespaces.businesspartner.selectable.BusinessPartnerSelectable;
@@ -26,6 +30,8 @@ public class GetBusinessPartnerMockedTest {
     private static BusinessPartner alice;
     private static BusinessPartner bob;
 
+    private static final String CATEGORY_PERSON = "1";
+
     @BeforeClass
     public static void beforeClass() throws Exception {
         alice = new BusinessPartner();
@@ -33,6 +39,11 @@ public class GetBusinessPartnerMockedTest {
 
         bob = new BusinessPartner();
         bob.setFirstName("Bob");
+    }
+
+    @Before
+    public void before() {
+        Caching.getCachingProvider().getCacheManager().destroyCache(GetBusinessPartnersCommand.class.getName());
     }
 
     @Test
@@ -58,7 +69,7 @@ public class GetBusinessPartnerMockedTest {
         final BusinessPartnerService service = Mockito.mock(BusinessPartnerService.class, RETURNS_DEEP_STUBS);
         final HttpDestination httpDestination = Mockito.mock(HttpDestination.class);
         when(service.getAllBusinessPartner()
-                .filter(BusinessPartner.CUSTOMER.ne(""))
+                .filter(BusinessPartner.BUSINESS_PARTNER_CATEGORY.eq(CATEGORY_PERSON))
                 .select(any(BusinessPartnerSelectable.class))
                 .executeRequest(any(HttpDestination.class)))
                 .thenReturn(Lists.newArrayList(alice));
@@ -69,7 +80,7 @@ public class GetBusinessPartnerMockedTest {
         assertEquals("Alice", businessPartnerList.get(0).getFirstName());
     }
 
-    @Test(expected = ResilienceRuntimeException.class)
+    @Test
     public void testGetBusinessPartnerFailure() throws Exception {
         final BusinessPartnerService service = Mockito.mock(BusinessPartnerService.class, RETURNS_DEEP_STUBS);
         final HttpDestination httpDestination = Mockito.mock(HttpDestination.class);
@@ -78,8 +89,10 @@ public class GetBusinessPartnerMockedTest {
                 .filter(any())
                 .select(any())
                 .executeRequest(any()))
-                .thenThrow(new ODataException(null, "Something went wrong", null));
+                .thenReturn(Collections.emptyList());
 
-        new GetBusinessPartnersCommand(httpDestination, service).execute();
+        final List<BusinessPartner> businessPartnerList = new GetBusinessPartnersCommand(httpDestination, service).execute();
+
+        assertEquals(0, businessPartnerList.size());
     }
 }
